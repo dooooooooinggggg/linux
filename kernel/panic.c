@@ -47,12 +47,12 @@ int panic_on_warn __read_mostly;
 int panic_timeout = CONFIG_PANIC_TIMEOUT;
 EXPORT_SYMBOL_GPL(panic_timeout);
 
-#define PANIC_PRINT_TASK_INFO		0x00000001
-#define PANIC_PRINT_MEM_INFO		0x00000002
-#define PANIC_PRINT_TIMER_INFO		0x00000004
-#define PANIC_PRINT_LOCK_INFO		0x00000008
-#define PANIC_PRINT_FTRACE_INFO		0x00000010
-#define PANIC_PRINT_ALL_PRINTK_MSG	0x00000020
+#define PANIC_PRINT_TASK_INFO 0x00000001
+#define PANIC_PRINT_MEM_INFO 0x00000002
+#define PANIC_PRINT_TIMER_INFO 0x00000004
+#define PANIC_PRINT_LOCK_INFO 0x00000008
+#define PANIC_PRINT_FTRACE_INFO 0x00000010
+#define PANIC_PRINT_ALL_PRINTK_MSG 0x00000020
 unsigned long panic_print;
 
 ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
@@ -196,7 +196,7 @@ void panic(const char *fmt, ...)
 	 * panic_cpu to this CPU.  In this case, this is also the 1st CPU.
 	 */
 	this_cpu = raw_smp_processor_id();
-	old_cpu  = atomic_cmpxchg(&panic_cpu, PANIC_CPU_INVALID, this_cpu);
+	old_cpu = atomic_cmpxchg(&panic_cpu, PANIC_CPU_INVALID, this_cpu);
 
 	if (old_cpu != PANIC_CPU_INVALID && old_cpu != this_cpu)
 		panic_smp_self_stop();
@@ -332,7 +332,7 @@ void panic(const char *fmt, ...)
 	/* Do not scroll important messages printed above */
 	suppress_printk = 1;
 	local_irq_enable();
-	for (i = 0; ; i += PANIC_TIMER_STEP) {
+	for (i = 0;; i += PANIC_TIMER_STEP) {
 		touch_softlockup_watchdog();
 		if (i >= i_next) {
 			i += panic_blink(state ^= 1);
@@ -349,24 +349,24 @@ EXPORT_SYMBOL(panic);
  * is being removed anyway.
  */
 const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
-	[ TAINT_PROPRIETARY_MODULE ]	= { 'P', 'G', true },
-	[ TAINT_FORCED_MODULE ]		= { 'F', ' ', true },
-	[ TAINT_CPU_OUT_OF_SPEC ]	= { 'S', ' ', false },
-	[ TAINT_FORCED_RMMOD ]		= { 'R', ' ', false },
-	[ TAINT_MACHINE_CHECK ]		= { 'M', ' ', false },
-	[ TAINT_BAD_PAGE ]		= { 'B', ' ', false },
-	[ TAINT_USER ]			= { 'U', ' ', false },
-	[ TAINT_DIE ]			= { 'D', ' ', false },
-	[ TAINT_OVERRIDDEN_ACPI_TABLE ]	= { 'A', ' ', false },
-	[ TAINT_WARN ]			= { 'W', ' ', false },
-	[ TAINT_CRAP ]			= { 'C', ' ', true },
-	[ TAINT_FIRMWARE_WORKAROUND ]	= { 'I', ' ', false },
-	[ TAINT_OOT_MODULE ]		= { 'O', ' ', true },
-	[ TAINT_UNSIGNED_MODULE ]	= { 'E', ' ', true },
-	[ TAINT_SOFTLOCKUP ]		= { 'L', ' ', false },
-	[ TAINT_LIVEPATCH ]		= { 'K', ' ', true },
-	[ TAINT_AUX ]			= { 'X', ' ', true },
-	[ TAINT_RANDSTRUCT ]		= { 'T', ' ', true },
+	[TAINT_PROPRIETARY_MODULE] = { 'P', 'G', true },
+	[TAINT_FORCED_MODULE] = { 'F', ' ', true },
+	[TAINT_CPU_OUT_OF_SPEC] = { 'S', ' ', false },
+	[TAINT_FORCED_RMMOD] = { 'R', ' ', false },
+	[TAINT_MACHINE_CHECK] = { 'M', ' ', false },
+	[TAINT_BAD_PAGE] = { 'B', ' ', false },
+	[TAINT_USER] = { 'U', ' ', false },
+	[TAINT_DIE] = { 'D', ' ', false },
+	[TAINT_OVERRIDDEN_ACPI_TABLE] = { 'A', ' ', false },
+	[TAINT_WARN] = { 'W', ' ', false },
+	[TAINT_CRAP] = { 'C', ' ', true },
+	[TAINT_FIRMWARE_WORKAROUND] = { 'I', ' ', false },
+	[TAINT_OOT_MODULE] = { 'O', ' ', true },
+	[TAINT_UNSIGNED_MODULE] = { 'E', ' ', true },
+	[TAINT_SOFTLOCKUP] = { 'L', ' ', false },
+	[TAINT_LIVEPATCH] = { 'K', ' ', true },
+	[TAINT_AUX] = { 'X', ' ', true },
+	[TAINT_RANDSTRUCT] = { 'T', ' ', true },
 };
 
 /**
@@ -390,8 +390,8 @@ const char *print_tainted(void)
 		s = buf + sprintf(buf, "Tainted: ");
 		for (i = 0; i < TAINT_FLAGS_COUNT; i++) {
 			const struct taint_flag *t = &taint_flags[i];
-			*s++ = test_bit(i, &tainted_mask) ?
-					t->c_true : t->c_false;
+			*s++ = test_bit(i, &tainted_mask) ? t->c_true :
+							    t->c_false;
 		}
 		*s = 0;
 	} else
@@ -604,8 +604,8 @@ void warn_slowpath_fmt(const char *file, int line, const char *fmt, ...)
 }
 EXPORT_SYMBOL(warn_slowpath_fmt);
 
-void warn_slowpath_fmt_taint(const char *file, int line,
-			     unsigned taint, const char *fmt, ...)
+void warn_slowpath_fmt_taint(const char *file, int line, unsigned taint,
+			     const char *fmt, ...)
 {
 	struct warn_args args;
 
@@ -670,7 +670,7 @@ device_initcall(register_warn_debugfs);
 __visible void __stack_chk_fail(void)
 {
 	panic("stack-protector: Kernel stack is corrupted in: %pB",
-		__builtin_return_address(0));
+	      __builtin_return_address(0));
 }
 EXPORT_SYMBOL(__stack_chk_fail);
 
@@ -680,10 +680,10 @@ EXPORT_SYMBOL(__stack_chk_fail);
 void refcount_error_report(struct pt_regs *regs, const char *err)
 {
 	WARN_RATELIMIT(1, "refcount_t %s at %pB in %s[%d], uid/euid: %u/%u\n",
-		err, (void *)instruction_pointer(regs),
-		current->comm, task_pid_nr(current),
-		from_kuid_munged(&init_user_ns, current_uid()),
-		from_kuid_munged(&init_user_ns, current_euid()));
+		       err, (void *)instruction_pointer(regs), current->comm,
+		       task_pid_nr(current),
+		       from_kuid_munged(&init_user_ns, current_uid()),
+		       from_kuid_munged(&init_user_ns, current_euid()));
 }
 #endif
 
